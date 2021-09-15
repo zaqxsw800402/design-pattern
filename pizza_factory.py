@@ -28,7 +28,6 @@ class JP(Source):
 
 
 class Pizza(ABC):
-
     @abstractmethod
     def bake(self):
         pass
@@ -63,6 +62,18 @@ class Taiwan(Pizza):
         self.source.paper()
         print('Taiwan cut')
 
+class HongKong(Pizza):
+    def __init__(self, source: Source = JP()):
+        self.source = source
+
+    def bake(self):
+        self.source.soil()
+        print('HongKong bake')
+
+    def cut(self):
+        self.source.paper()
+        print('HongKong cut')
+
 
 class PizzaFactory(ABC):
     def create_pizza(self, name: str, source: Source) -> Pizza:
@@ -79,8 +90,8 @@ class TaiwanFactory(PizzaFactory):
 
 class HKFactory(PizzaFactory):
     def create_pizza(self, name, source) -> Pizza:
-        if name == 'Taiwan':
-            return Taiwan(source)
+        if name == 'HongKong':
+            return HongKong(source)
         elif name == 'Hawayi':
             return Hawayi(source)
 
@@ -99,6 +110,9 @@ class TaiwanStore(PizzaStore):
     def __init__(self):
         self.factory = TaiwanFactory()
 
+    def change_factory(self, factory: PizzaFactory):
+        self.factory=factory
+
     def _create_pizza(self, pizza_name: str, source):
         return self.factory.create_pizza(pizza_name, source)
 
@@ -111,4 +125,8 @@ class TaiwanStore(PizzaStore):
 if __name__ == '__main__':
     tw = TaiwanStore()
     tw.order('Taiwan', JP())
+    tw.order('Hawayi', CK())
+    print('------------')
+    tw.change_factory(HKFactory())
+    tw.order('HongKong', JP())
     tw.order('Hawayi', CK())
