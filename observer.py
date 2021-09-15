@@ -9,6 +9,7 @@ class Source:
 
     def set_value(self, value):
         self.value = value
+        self._send_value()
 
     def get_value(self):
         return self.value
@@ -17,14 +18,13 @@ class Source:
         self.list.append(ob)
         ob.add_sources(self)
 
-    def send_value(self):
+    def _send_value(self):
         for observer in self.list:
             observer.update()
 
 
 class Observer(Protocol):
-
-    def add_sources(self, source):
+    def add_sources(self, source:Source):
         pass
 
     def update(self):
@@ -33,24 +33,24 @@ class Observer(Protocol):
 
 class FirstObserver(Observer):
     def __init__(self):
-        self.value = 0
+        self.value = 100
 
     def add_sources(self, source):
         self.source = source
 
     def update(self):
-        self.value = self.source.get_value()
+        self.value -= self.source.get_value()
 
 
 class SecondObserver(Observer):
     def __init__(self):
-        self.value = 0
+        self.value = 100
 
     def add_sources(self, source):
         self.source = source
 
     def update(self):
-        self.value = self.source.get_value()
+        self.value += self.source.get_value()
 
 
 if __name__ == '__main__':
@@ -61,9 +61,6 @@ if __name__ == '__main__':
     source.add_observer(so)
     print(fo.value)
     source.set_value(5)
-    source.send_value()
     print(fo.value)
     source.set_value(10)
-    source.send_value()
     print(so.value)
-    print(so.source)
