@@ -65,33 +65,33 @@ class Taiwan(Pizza):
 
 
 class PizzaFactory(ABC):
-    def create_pizza(self, name: str) -> Pizza:
+    def create_pizza(self, name: str, source: Source) -> Pizza:
         pass
 
 
 class TaiwanFactory(PizzaFactory):
-    def create_pizza(self, name) -> Pizza:
+    def create_pizza(self, name, source) -> Pizza:
         if name == 'Taiwan':
-            return Taiwan()
+            return Taiwan(source)
         elif name == 'Hawayi':
-            return Hawayi()
+            return Hawayi(source)
 
 
 class HKFactory(PizzaFactory):
-    def create_pizza(self, name) -> Pizza:
+    def create_pizza(self, name, source) -> Pizza:
         if name == 'Taiwan':
-            return Taiwan()
+            return Taiwan(source)
         elif name == 'Hawayi':
-            return Hawayi()
+            return Hawayi(source)
 
 
 class PizzaStore(ABC):
     @abstractmethod
-    def _create_pizza(self, pizza_name: str) -> Pizza:
+    def _create_pizza(self, pizza_name: str, source: Source) -> Pizza:
         pass
 
     @abstractmethod
-    def order(self, pizza_name: str):
+    def order(self, pizza_name: str, source: Source):
         pass
 
 
@@ -99,16 +99,16 @@ class TaiwanStore(PizzaStore):
     def __init__(self):
         self.factory = TaiwanFactory()
 
-    def _create_pizza(self, pizza_name: str):
-        return self.factory.create_pizza(pizza_name)
+    def _create_pizza(self, pizza_name: str, source):
+        return self.factory.create_pizza(pizza_name, source)
 
-    def order(self, pizza_name: str):
-        pizza = self._create_pizza(pizza_name)
+    def order(self, pizza_name: str, source):
+        pizza = self._create_pizza(pizza_name, source)
         pizza.bake()
         pizza.cut()
 
 
 if __name__ == '__main__':
     tw = TaiwanStore()
-    tw.order('Taiwan')
-    tw.order('Hawayi')
+    tw.order('Taiwan', JP())
+    tw.order('Hawayi', CK())
