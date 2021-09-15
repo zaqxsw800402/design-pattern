@@ -18,6 +18,9 @@ class Source:
         self.list.append(ob)
         ob.add_sources(self)
 
+    def delete_observer(self, ob: Observer):
+        self.list.remove(ob)
+
     def _send_value(self):
         for observer in self.list:
             observer.update()
@@ -63,4 +66,7 @@ if __name__ == '__main__':
     source.set_value(5)
     print(fo.value)
     source.set_value(10)
+    print(so.value)
+    source.delete_observer(so)
+    source.set_value(50)
     print(so.value)
