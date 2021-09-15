@@ -62,6 +62,7 @@ class Taiwan(Pizza):
         self.source.paper()
         print('Taiwan cut')
 
+
 class HongKong(Pizza):
     def __init__(self, source: Source = JP()):
         self.source = source
@@ -81,42 +82,40 @@ class PizzaFactory(ABC):
 
 
 class TaiwanFactory(PizzaFactory):
+    pizza = {'Taiwan': Taiwan, 'Hawayi': Hawayi}
+
     def create_pizza(self, name, source) -> Pizza:
-        if name == 'Taiwan':
-            return Taiwan(source)
-        elif name == 'Hawayi':
-            return Hawayi(source)
+        return self.pizza.get(name, 'Taiwan')(source)
 
 
 class HKFactory(PizzaFactory):
-    def create_pizza(self, name, source) -> Pizza:
-        if name == 'HongKong':
-            return HongKong(source)
-        elif name == 'Hawayi':
-            return Hawayi(source)
+    pizza = {'HongKong': HongKong, 'Hawayi': Hawayi}
+
+    def create_pizza(self, pizza_name, source) -> Pizza:
+        return self.pizza.get(pizza_name, 'HongKong')(source)
 
 
 class PizzaStore(ABC):
     @abstractmethod
-    def _create_pizza(self, pizza_name: str, source: Source) -> Pizza:
+    def _create_pizza(self, pizza_name, source: Source) -> Pizza:
         pass
 
     @abstractmethod
-    def order(self, pizza_name: str, source: Source):
+    def order(self, pizza_name, source: Source):
         pass
 
 
 class TaiwanStore(PizzaStore):
-    def __init__(self):
-        self.factory = TaiwanFactory()
+    def __init__(self, factory: PizzaFactory = TaiwanFactory()):
+        self.factory = factory
 
     def change_factory(self, factory: PizzaFactory):
-        self.factory=factory
+        self.factory = factory
 
-    def _create_pizza(self, pizza_name: str, source):
+    def _create_pizza(self, pizza_name: str, source: Source):
         return self.factory.create_pizza(pizza_name, source)
 
-    def order(self, pizza_name: str, source):
+    def order(self, pizza_name: str, source: Source):
         pizza = self._create_pizza(pizza_name, source)
         pizza.bake()
         pizza.cut()
@@ -124,9 +123,11 @@ class TaiwanStore(PizzaStore):
 
 if __name__ == '__main__':
     tw = TaiwanStore()
-    tw.order('Taiwan', JP())
-    tw.order('Hawayi', CK())
+    jp_source = JP()
+    ck_source = CK()
+    tw.order('Taiwan', jp_source)
+    tw.order('Hawayi', ck_source)
     print('------------')
     tw.change_factory(HKFactory())
-    tw.order('HongKong', JP())
-    tw.order('Hawayi', CK())
+    tw.order('HongKong', jp_source)
+    tw.order('Hawayi', ck_source)
