@@ -27,14 +27,14 @@ class Source:
 
 
 class Observer(Protocol):
-    def add_sources(self, source:Source):
+    def add_sources(self, source: Source):
         pass
 
     def update(self):
         pass
 
 
-class FirstObserver(Observer):
+class FirstObserver:
     def __init__(self):
         self.value = 100
 
@@ -43,9 +43,10 @@ class FirstObserver(Observer):
 
     def update(self):
         self.value -= self.source.get_value()
+        print(self.value)
 
 
-class SecondObserver(Observer):
+class SecondObserver:
     def __init__(self):
         self.value = 100
 
@@ -54,6 +55,16 @@ class SecondObserver(Observer):
 
     def update(self):
         self.value += self.source.get_value()
+        print(self.value)
+
+
+def add_values(source: Source):
+    while True:
+        try:
+            value = int(input('what value would you like to add to source: '))
+            source.set_value(value)
+        except ValueError:
+            break
 
 
 if __name__ == '__main__':
@@ -62,11 +73,7 @@ if __name__ == '__main__':
     so = SecondObserver()
     source.add_observer(fo)
     source.add_observer(so)
-    print(fo.value)
-    source.set_value(5)
-    print(fo.value)
-    source.set_value(10)
-    print(so.value)
+    add_values(source)
     source.delete_observer(so)
     source.set_value(50)
     print(so.value)
