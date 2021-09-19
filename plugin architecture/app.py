@@ -3,7 +3,7 @@ import factory
 import importlib
 
 
-def load_plugin(plugin_file):
+def load_plugin(plugin_file: str) -> None:
     plugin = importlib.import_module(plugin_file)
     plugin.register()
 
@@ -19,5 +19,6 @@ with open("data.json") as file:
         load_plugin(plugin_file)
 
     character_list = [factory.create(character) for character in characters]
+
     for character in character_list:
         character.say_hi()
