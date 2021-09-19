@@ -1,10 +1,10 @@
 import json
-import factory
 import importlib
+import factory
 
 
-def load_plugin(plugin_file: str) -> None:
-    plugin = importlib.import_module(plugin_file)
+def load_plugin(plugin_: str) -> None:
+    plugin = importlib.import_module(plugin_)
     plugin.register()
 
 
