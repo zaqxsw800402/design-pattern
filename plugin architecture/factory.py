@@ -5,18 +5,25 @@ from dataclasses import dataclass
 @dataclass
 class Country(Protocol):
     name: str
-    country: str
 
     def say_hi(self):
-        print(f"My name is {self.name}, from {self.country}")
+        print(f"My name is {self.name}, from {self.__class__.__name__}")
 
 
-class Taiwan(Country):
-    pass
+@dataclass
+class Taiwan:
+    name: str
+
+    def say_hi(self):
+        print(f"My name is {self.name}, from {self.__class__.__name__}")
 
 
-class HongKong(Country):
-    pass
+@dataclass
+class HongKong:
+    name: str
+
+    def say_hi(self):
+        print(f"My name is {self.name}, from {self.__class__.__name__}")
 
 
 nation_dict = {}
@@ -35,3 +42,9 @@ def create(arguments):
 def test_register():
     register('Taiwan', Taiwan)
     assert 'Taiwan' in nation_dict
+
+
+def test_create():
+    register('Taiwan', Taiwan)
+    args = dict(country="Taiwan", name='henry')
+    assert Taiwan('henry') == create(args)

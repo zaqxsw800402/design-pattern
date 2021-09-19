@@ -6,7 +6,12 @@
     },
     {
       "name": "Lily",
-      "country": "Hongkong"
+      "country": "HongKong"
+    },
+    {
+      "name": "Evan",
+      "country": "Japan"
     }
-  ]
+  ],
+  "plugins": ["plugins.japan","plugins.korean"]
 }
