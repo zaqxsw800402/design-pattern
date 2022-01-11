@@ -24,6 +24,7 @@ func (t tw) String() string {
 
 func main() {
 	a := tw{person{age: 39}}
+	a.age = 20
 	i := a.Age()
 	fmt.Println(i)
 	fmt.Println(a.String())
